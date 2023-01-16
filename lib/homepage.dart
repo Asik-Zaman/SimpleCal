@@ -1,6 +1,8 @@
+import 'package:calculator/calculation_provider.dart';
 import 'package:calculator/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,12 +16,13 @@ class _HomePageState extends State<HomePage> {
   var result = '0';
   @override
   Widget build(BuildContext context) {
+    final calc = Provider.of<Calculation>(context);
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
-            top: 120,
+            top: 0,
           ),
           child: Column(
             children: [
@@ -31,25 +34,31 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          userInput.toString(),
-                          style: TextStyle(fontSize: 40, color: Colors.white),
-                        ),
-                      ),
+                          alignment: Alignment.bottomRight,
+                          child: Consumer<Calculation>(
+                            builder: (context, value, child) {
+                              return Text(
+                                value.userInput.toString(),
+                                style: TextStyle(
+                                    fontSize: 40, color: Colors.white),
+                              );
+                            },
+                          )),
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        result.toString(),
-                        style: TextStyle(fontSize: 40, color: Colors.white),
-                      ),
+                      Consumer<Calculation>(builder: ((context, value, child) {
+                        return Text(
+                          value.result.toString(),
+                          style: TextStyle(fontSize: 40, color: Colors.white),
+                        );
+                      }))
                     ],
                   ),
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Column(
                   children: [
                     Row(
@@ -57,34 +66,26 @@ class _HomePageState extends State<HomePage> {
                         Constants(
                           title: 'AC',
                           onPress: () {
-                            userInput = '';
-                            result = '0';
-                            setState(() {});
+                            calc.numberClear();
                           },
                         ),
                         Constants(
                           title: '(',
                           onPress: () {
-                            setState(() {
-                              userInput += '(';
-                            });
+                            calc.numberChange('(');
                           },
                         ),
                         Constants(
                           title: ')',
                           onPress: () {
-                            setState(() {
-                              userInput += ')';
-                            });
+                            calc.numberChange(')');
                           },
                         ),
                         Constants(
                           title: '/',
                           color: Colors.orange,
                           onPress: () {
-                            setState(() {
-                              userInput += '/';
-                            });
+                            calc.numberChange('/');
                           },
                         ),
                       ],
@@ -94,35 +95,26 @@ class _HomePageState extends State<HomePage> {
                         Constants(
                           title: '7',
                           onPress: () {
-                            setState(() {
-                              userInput += '7';
-                              result = '';
-                            });
+                            calc.numberChange('7');
                           },
                         ),
                         Constants(
                           title: '8',
                           onPress: () {
-                            setState(() {
-                              userInput += '8';
-                            });
+                            calc.numberChange('8');
                           },
                         ),
                         Constants(
                           title: '9',
                           onPress: () {
-                            setState(() {
-                              userInput += '9';
-                            });
+                            calc.numberChange('9');
                           },
                         ),
                         Constants(
                           title: 'x',
                           color: Colors.orange,
                           onPress: () {
-                            setState(() {
-                              userInput += 'x';
-                            });
+                            calc.numberChange('x');
                           },
                         ),
                       ],
@@ -132,34 +124,26 @@ class _HomePageState extends State<HomePage> {
                         Constants(
                           title: '4',
                           onPress: () {
-                            setState(() {
-                              userInput += '4';
-                            });
+                            calc.numberChange('4');
                           },
                         ),
                         Constants(
                           title: '5',
                           onPress: () {
-                            setState(() {
-                              userInput += '5';
-                            });
+                            calc.numberChange('5');
                           },
                         ),
                         Constants(
                           title: '6',
                           onPress: () {
-                            setState(() {
-                              userInput += '6';
-                            });
+                            calc.numberChange('6');
                           },
                         ),
                         Constants(
                           title: '-',
                           color: Colors.orange,
                           onPress: () {
-                            setState(() {
-                              userInput += '-';
-                            });
+                            calc.numberChange('-');
                           },
                         ),
                       ],
@@ -169,34 +153,26 @@ class _HomePageState extends State<HomePage> {
                         Constants(
                           title: '1',
                           onPress: () {
-                            setState(() {
-                              userInput += '1';
-                            });
+                            calc.numberChange('1');
                           },
                         ),
                         Constants(
                           title: '2',
                           onPress: () {
-                            setState(() {
-                              userInput += '2';
-                            });
+                            calc.numberChange('2');
                           },
                         ),
                         Constants(
                           title: '3',
                           onPress: () {
-                            setState(() {
-                              userInput += '3';
-                            });
+                            calc.numberChange('3');
                           },
                         ),
                         Constants(
                           title: '+',
                           color: Colors.orange,
                           onPress: () {
-                            setState(() {
-                              userInput += '+';
-                            });
+                            calc.numberChange('+');
                           },
                         ),
                       ],
@@ -206,35 +182,26 @@ class _HomePageState extends State<HomePage> {
                         Constants(
                           title: '0',
                           onPress: () {
-                            setState(() {
-                              userInput += '0';
-                            });
+                            calc.numberChange('0');
                           },
                         ),
                         Constants(
                           title: '.',
                           onPress: () {
-                            setState(() {
-                              userInput += '.';
-                            });
+                            calc.numberChange('.');
                           },
                         ),
                         Constants(
                           title: 'DEL',
                           onPress: () {
-                            setState(() {
-                              result = '';
-                              userInput =
-                                  userInput.substring(0, userInput.length - 1);
-                            });
+                            calc.numberDelete();
                           },
                         ),
                         Constants(
                           title: '=',
                           color: Colors.orange,
                           onPress: () {
-                            equalPressed();
-                            setState(() {});
+                            calc.equalPressed();
                           },
                         ),
                       ],
